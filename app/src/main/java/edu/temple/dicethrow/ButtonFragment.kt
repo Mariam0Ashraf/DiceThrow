@@ -9,16 +9,11 @@ import android.view.ViewGroup
 import android.widget.Button
 
 class ButtonFragment : Fragment() {
-
-    private var listener: OnButtonClickListener? = null
-
-    interface OnButtonClickListener {
-        fun onButtonClick()
-    }
+    private var listener: ButtonInterface? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnButtonClickListener) {
+        if (context is ButtonInterface) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnButtonClickListener")
@@ -31,7 +26,7 @@ class ButtonFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_button, container, false).apply {
             findViewById<Button>(R.id.rollDiceButton).setOnClickListener {
-                listener?.onButtonClick()
+                (requireActivity() as ButtonInterface).buttonClicked()
             }
         }
     }
@@ -39,5 +34,8 @@ class ButtonFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+    interface ButtonInterface{
+        fun buttonClicked()
     }
 }
